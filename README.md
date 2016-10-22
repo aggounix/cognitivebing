@@ -1,8 +1,9 @@
 # Cognitivebing
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cognitivebing`. To experiment with that code, run `bin/console` for an interactive prompt.
+A gem for the new Bing Web Search API from Microsoft cognitive services.
 
-TODO: Delete this and the text above, and describe your gem
+https://www.microsoft.com/cognitive-services/en-us/apis
+
 
 ## Installation
 
@@ -22,7 +23,11 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+require 'cognitivebing'
+
+bing = CognitiveBing.new(account_key)
+
+result_set = bing.search(search_term)
 
 ## Development
 
