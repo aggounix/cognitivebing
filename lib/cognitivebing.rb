@@ -11,21 +11,30 @@ class CognitiveBing
     @params = params
   end
   
-  def search(search_term)
+  
+  def search(search_term, type = 'web')
     
-    user = ''
-    #sources_portion = URI.encode_www_form_component('\'' + @type + '\'')
-    query_string = 'q='
+    
+    query_string = '?q='
     query_portion = URI.encode_www_form_component('\'' + search_term + '\'')
-    params = "&Ocp-Apim-Subscription-Key=#{@account_key}&count=20&offset=0&mkt=fr-FR&safesearch=Moderate"
-    #@params.each do |k,v|
-    #  params << "&#{k.to_s}=\'#{v.to_s}\'"
-    #end
+    params = "&Ocp-Apim-Subscription-Key=#{@account_key}"
+    @params.each do |k,v|
+      params << "&#{k.to_s}=#{v.to_s}"
+      
+    end
     
+    web_search_url = ""
     
-    web_search_url = "https://api.cognitive.microsoft.com/bing/v5.0/search?"
+    if type == "videos"
+      web_search_url = "https://api.cognitive.microsoft.com/bing/v5.0/videos/search"
+    elsif type == "image"
+      web_search_url = "https://api.cognitive.microsoft.com/bing/v5.0/images/search"
+    else
+      web_search_url = "https://api.cognitive.microsoft.com/bing/v5.0/search"
+    end
+    
     full_address = web_search_url + query_string + query_portion + params   
-    
+    puts full_address
     
     uri = URI(full_address)
     req = Net::HTTP::Get.new(uri.request_uri)
@@ -38,9 +47,34 @@ class CognitiveBing
 
     body = JSON.parse(res.body, :symbolize_names => true)
         
-    #puts body[:webPages].keys
-    #puts body[:webPages][:value]
-    #result_set = body[:d][:results]
+    
+    return body
+  end
+  
+  def suggestions(search_term)
+    
+    
+    query_string = '?q='
+    query_portion = URI.encode_www_form_component( search_term )
+    
+    
+    
+    web_search_url = "https://api.cognitive.microsoft.com/bing/v5.0/suggestions"
+    
+    full_address = web_search_url + query_string + query_portion 
+    
+    uri = URI(full_address)
+    req = Net::HTTP::Get.new(uri.request_uri)
+    req.add_field("Ocp-Apim-Subscription-Key", @account_key)
+    
+
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https'){|http|
+      http.request(req)
+    }
+
+    body = JSON.parse(res.body, :symbolize_names => true)
+        
+    
     return body
   end
 end

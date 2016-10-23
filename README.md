@@ -26,8 +26,19 @@ Or install it yourself as:
 require 'cognitivebing'
 
 bing = CognitiveBing.new(account_key)
-
+#web search
 result_set = bing.search(search_term)
+#Image search
+result_set = bing.search(search_term, 'image')
+#Video search
+result_set = bing.search(search_term, 'videos')
+#Suggestion search
+result_set = bing.suggestions(search_term)
+#News search
+bing = CognitiveBingNews.new(account_key)
+result_set = bing.search(search_term)
+#News trending 
+result_set = bing.trending
 
 ## Development
 
