@@ -26,6 +26,9 @@ Or install it yourself as:
 require 'cognitivebing'
 
 bing = CognitiveBing.new(account_key)
+#call with params
+bing = CognitiveBing.new(account_key, :mkt => "en-US", :count => 10, :offset => 0, :safesearch => "Moderate")
+(to see params details : https://dev.cognitive.microsoft.com/docs/services/56b43eeccf5ff8098cef3807/operations/56b4447dcf5ff8098cef380d) 
 #web search
 result_set = bing.search(search_term)
 #Image search
