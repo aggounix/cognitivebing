@@ -33,8 +33,7 @@ class CognitiveBing
       web_search_url = "https://api.cognitive.microsoft.com/bing/v5.0/search"
     end
     
-    full_address = web_search_url + query_string + query_portion + params   
-    puts full_address
+    full_address = web_search_url + query_string + query_portion + params
     
     uri = URI(full_address)
     req = Net::HTTP::Get.new(uri.request_uri)
