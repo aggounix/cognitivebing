@@ -103,7 +103,7 @@ class CognitiveBingNews
     
     
     full_address = web_search_url + query_string + query_portion + paramsbuilder   
-    puts full_address
+    
     
     uri = URI(full_address)
     req = Net::HTTP::Get.new(uri.request_uri)
