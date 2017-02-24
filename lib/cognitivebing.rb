@@ -91,7 +91,7 @@ class CognitiveBingNews
 
 
     query_string = '?q='
-    query_portion = URI.encode_www_form_component('\'' + search_term + '\'')
+    query_portion = URI.encode_www_form_component(search_term)
     paramsbuilder = "&Ocp-Apim-Subscription-Key=#{@account_key}"
     @params.each do |k,v|
       paramsbuilder << "&#{k.to_s}=#{v.to_s}"
