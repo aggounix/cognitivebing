@@ -22,15 +22,16 @@ Or install it yourself as:
     $ gem install cognitivebing
 
 ## Usage
-
+```ruby
 require 'cognitivebing'
 
 bing = CognitiveBing.new(account_key)
 #call with params
 bing = CognitiveBing.new(account_key, :mkt => "en-US", :count => 10, :offset => 0, :safesearch => "Moderate")
+```
 
-
-(to see params details : https://dev.cognitive.microsoft.com/docs/services/56b43eeccf5ff8098cef3807/operations/56b4447dcf5ff8098cef380d) 
+(to see params details : https://dev.cognitive.microsoft.com/docs/services/56b43eeccf5ff8098cef3807/operations/56b4447dcf5ff8098cef380d)
+```ruby
 #web search
 result_set = bing.search(search_term)
 #Image search
@@ -44,6 +45,7 @@ bing = CognitiveBingNews.new(account_key)
 result_set = bing.search(search_term)
 #News trending 
 result_set = bing.trending
+```
 
 ## Development
 
@@ -53,7 +55,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cognitivebing. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cognitivebing. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](./CODE_OF_CONDUCT.md) code of conduct.
 
 
 ## License
