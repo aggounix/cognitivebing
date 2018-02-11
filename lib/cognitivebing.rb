@@ -4,6 +4,8 @@ require 'open-uri'
 require 'net/http'
 
 class CognitiveBing
+  class BingUnavailableException < Exception; end
+
   attr_accessor :account_key, :params
 
   def initialize(account_key, params = {})
@@ -44,10 +46,17 @@ class CognitiveBing
       http.request(req)
     }
 
-    body = JSON.parse(res.body, :symbolize_names => true)
+    begin
+      body = JSON.parse(res.body, :symbolize_names => true)
+    rescue => e
+      if e.message.include?("Bing services aren't available right now")
+        raise(BingUnavailableException)
+      else
+        raise(e)
+      end
+    end
 
-
-    return body
+    body
   end
 
   def suggestions(search_term)
