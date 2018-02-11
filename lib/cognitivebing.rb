@@ -3,7 +3,10 @@ require 'json'
 require 'open-uri'
 require 'net/http'
 
+
 class CognitiveBing
+  class BingUnavailableException < Exception; end
+
   attr_accessor :account_key, :params
 
   def initialize(account_key, params = {})
@@ -16,9 +19,9 @@ class CognitiveBing
 
 
     query_string = '?q='
-    query_portion = URI.encode_www_form_component(search_term)
-    params = ""
-    @params.each do |k,v|
+    query_portion = URI.encode_www_form_component('\'' + search_term + '\'')
+    params = "&Ocp-Apim-Subscription-Key=#{@account_key}"
+    @params.each do |k, v|
       params << "&#{k.to_s}=#{v.to_s}"
 
     end
@@ -40,7 +43,7 @@ class CognitiveBing
     req.add_field("Ocp-Apim-Subscription-Key", @account_key)
 
 
-    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https'){|http|
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') { |http|
       http.request(req)
     }
 
@@ -57,7 +60,6 @@ class CognitiveBing
     query_portion = URI.encode_www_form_component(search_term)
 
 
-
     web_search_url = "https://api.cognitive.microsoft.com/bing/v5.0/suggestions"
 
     full_address = web_search_url + query_string + query_portion
@@ -67,14 +69,20 @@ class CognitiveBing
     req.add_field("Ocp-Apim-Subscription-Key", @account_key)
 
 
-    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https'){|http|
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') { |http|
       http.request(req)
     }
+    begin
+      body = JSON.parse(res.body, :symbolize_names => true)
+    rescue => e
+      if e.message.include?("Bing services aren't available right now")
+        raise(BingUnavailableException)
+      else
+        raise(e)
+      end
+    end
 
-    body = JSON.parse(res.body, :symbolize_names => true)
-
-
-    return body
+    body
   end
 end
 
@@ -91,9 +99,9 @@ class CognitiveBingNews
 
 
     query_string = '?q='
-    query_portion = URI.encode_www_form_component(search_term)
+    query_portion = URI.encode_www_form_component('\'' + search_term + '\'')
     paramsbuilder = "&Ocp-Apim-Subscription-Key=#{@account_key}"
-    @params.each do |k,v|
+    @params.each do |k, v|
       paramsbuilder << "&#{k.to_s}=#{v.to_s}"
 
 
@@ -103,14 +111,14 @@ class CognitiveBingNews
 
 
     full_address = web_search_url + query_string + query_portion + paramsbuilder
-
+    puts full_address
 
     uri = URI(full_address)
     req = Net::HTTP::Get.new(uri.request_uri)
     req.add_field("Ocp-Apim-Subscription-Key", @account_key)
 
 
-    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https'){|http|
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') { |http|
       http.request(req)
     }
 
@@ -121,15 +129,13 @@ class CognitiveBingNews
   end
 
 
-
   def category(category_term, params = {})
 
     web_search_url = URI('https://api.cognitive.microsoft.com/bing/v5.0/news/')
-      web_search_url.query = URI.encode_www_form({
-          # Request parameters
-          'category' => category_term.to_s
+    web_search_url.query = URI.encode_www_form({
+      # Request parameters
+      'category' => '#{category_term}'
     })
-
 
 
     uri = URI(web_search_url)
@@ -137,7 +143,7 @@ class CognitiveBingNews
     req.add_field("Ocp-Apim-Subscription-Key", @account_key)
 
 
-    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https'){|http|
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') { |http|
       http.request(req)
     }
 
@@ -158,7 +164,7 @@ class CognitiveBingNews
     req.add_field("Ocp-Apim-Subscription-Key", @account_key)
 
 
-    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https'){|http|
+    res = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') { |http|
       http.request(req)
     }
 
