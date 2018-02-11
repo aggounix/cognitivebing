@@ -5,8 +5,7 @@ require 'net/http'
 
 
 class CognitiveBing
-  class BingUnavailableException < Exception;
-  end
+  class BingUnavailableException < Exception; end
 
   attr_accessor :account_key, :params
 
